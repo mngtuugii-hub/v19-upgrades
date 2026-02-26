@@ -8,13 +8,13 @@
             <form>
                 <group>
                     <field name="report_id" required="1" options="{'no_create': True}"/>
-                    <field name="available_report_ids" invisible="1"/>
+                    <field name="available_report_ids" invisible="1"/> <!-- Required because it is used in the invisible condition above -->
                 </group>
 
                 <group name="documents_for_printing">
-                    <field name="record_model" invisible="1"/>
-                    <field name="record_ids" invisible="1"/>
-                    <field name="record_names" readonly="1"/>
+                    <field name="record_model" invisible="1"/> <!-- Required because it is used in the invisible condition above -->
+                    <field name="record_ids" invisible="1"/> <!-- Required because it is used in the invisible condition above -->
+                    <field name="record_names" readonly="1"/> <!-- Required because it is used in the invisible condition above -->
                 </group>
 
                 <group name="quantity_to_print">
@@ -24,7 +24,7 @@
                 <group name="printer">
                     <field name="printer_id" options="{'no_create': True, 'no_open': True}"/>
                     <field name="printer_bin" options="{'no_create': True, 'no_open': True}"/>
-                    <field name="status" invisible="1"/>
+                    <field name="status" invisible="1"/> <!-- Required because it is used in the invisible condition above -->
                 </group>
 
                 <p colspan="4" class="text-danger" invisible="status != 'offline'">

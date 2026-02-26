@@ -11,7 +11,8 @@ import requests
 from datetime import datetime, timedelta
 from urllib.parse import quote_plus, urlencode
 
-from odoo import api, fields, models, registry, SUPERUSER_ID, _
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.modules.registry import Registry
 from odoo.exceptions import UserError
 
 from .constants import Constants
@@ -88,6 +89,11 @@ class PrintNodePrinter(models.Model):
         required=False,
     )
 
+    default_paper_id = fields.Many2one(
+        'printnode.paper',
+        string='Default Paper'
+    )
+
     account_id = fields.Many2one(
         'printnode.account',
         string='Account',
@@ -105,13 +111,10 @@ class PrintNodePrinter(models.Model):
         compute='_compute_print_rules',
     )
 
-    _sql_constraints = [
-        (
-            'printnode_id',
-            'unique(printnode_id)',
-            'Printer ID should be unique.'
-        ),
-    ]
+    _unique_printnode_id = models.Constraint(
+        'UNIQUE(printnode_id)',
+        'Printer ID should be unique.',
+    )
 
     @api.depends('status', 'computer_id.status')
     def _compute_printer_status(self):
@@ -361,7 +364,7 @@ class PrintNodePrinter(models.Model):
             # The new cursor is used to create a printjob outside of the current transaction.
             # This provides access to the created print job (for example, through the controller)
             # immediately, without waiting for the current transaction to complete.
-            db_registry = registry(self.env.cr.dbname)
+            db_registry = Registry(self.env.cr.dbname)
             with db_registry.cursor() as cr:
                 try:
                     env = api.Environment(cr, SUPERUSER_ID, {})
@@ -428,7 +431,7 @@ class PrintNodePrinter(models.Model):
             self.printnode_logger(Constants.REQUESTS_LOG_TYPE, f'POST response: {job_id}')
 
             if self.env.company.secure_printing:
-                db_registry = registry(self.env.cr.dbname)
+                db_registry = Registry(self.env.cr.dbname)
 
                 with db_registry.cursor() as cr:
                     try:
@@ -488,6 +491,10 @@ class PrintNodePrinter(models.Model):
             options.update({'fit_to_page': False})
         if params:
             options.update(params)
+        if 'bin' not in options and self.default_printer_bin:
+            options.update({'bin': self.default_printer_bin.name})
+        if 'paper' not in options and self.default_paper_id:
+            options.update({'paper': self.default_paper_id.name})
 
         return options
 

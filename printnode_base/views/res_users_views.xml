@@ -7,7 +7,7 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form" />
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='messaging']" position="before">
+                <xpath expr="//page[@name='preferences']/group" position="after">
                     <group string="Printers" name="printing" col="2" groups="printnode_base.printnode_security_group_user">
                         <field name="printnode_enabled" />
                         <field name="printnode_printer" />
@@ -21,7 +21,7 @@
                             </div>
                         </div>
                         <field name="user_label_printer" />
-                        <field name="printnode_rule_ids" invisible="1" />
+                        <field name="printnode_rule_ids" invisible="1" /> <!-- Required because it is used in the invisible condition above -->
                     </group>
                     <group string="Scales" name="scales" col="2" groups="printnode_base.printnode_security_group_user">
                         <field name="scales_enabled" readonly="0" />
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                             <field name="user_label_printer" readonly="0"/>
-                            <field name="printnode_rule_ids" invisible="1"/>
+                            <field name="printnode_rule_ids" invisible="1"/> <!-- Required because it is used in the invisible condition above -->
                         </group>
                         <group string="Scales" name="scales" col="2" groups="printnode_base.printnode_security_group_user">
                             <field name="scales_enabled" readonly="0" />

@@ -8,11 +8,13 @@ The basic idea is to store the information about computer ID (generated in this 
 local storage and then use it to store the information about printers/scales in the database.
 */
 
+import { Component, onWillRender } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
-import { Component, onWillRender } from "@odoo/owl";
+
 
 const { xml } = owl;
 
@@ -24,7 +26,7 @@ class DirectPrintMainComponent extends Component {
         super.setup();
 
         this.orm = useService("orm");
-        this.user = useService("user");
+        this.user = user;
 
         onWillRender(async () => {
             if (session.dpc_company_enabled) {

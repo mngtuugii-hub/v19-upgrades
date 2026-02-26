@@ -1,10 +1,12 @@
 /** @odoo-module */
 
-import { makeErrorFromResponse } from "@web/core/network/rpc_service";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
-import { _t } from "@web/core/l10n/translation";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
+import { _t } from "@web/core/l10n/translation";
+import { makeErrorFromResponse, rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
+import { session } from "@web/session";
+
 
 import { WKHTMLTOPDF_MESSAGES } from "./constants";
 
@@ -80,7 +82,8 @@ export default class PrintActionHandler {
             action.context.printer_id,
             action.context.printer_bin,
         ]);
-        const context = JSON.stringify(env.services.user.context);
+
+        const context = JSON.stringify(user.context);
 
         let checkPromise = env.services.http.post(
             "/report/check",
@@ -100,7 +103,11 @@ export default class PrintActionHandler {
 
             try { // Case of a serialized Odoo Exception: It is Json Parsable
                 const printResultJson = JSON.parse(printResult);
-                if (printResultJson.success && printResultJson.notify) {
+                if (printResultJson.success) {
+                    if (!printResultJson.notify) {
+                        return true;
+                    }
+
                     env.services.notification.add(printResultJson.message, {
                         sticky: false,
                         type: "info",
@@ -145,7 +152,7 @@ export default class PrintActionHandler {
 
     async _checkWkhtmltopdfState(env) {
         if (!this.wkhtmltopdfStateProm) {
-            this.wkhtmltopdfStateProm = env.services.rpc("/report/check_wkhtmltopdf");
+            this.wkhtmltopdfStateProm = rpc("/report/check_wkhtmltopdf");
         }
         const state = await this.wkhtmltopdfStateProm;
 

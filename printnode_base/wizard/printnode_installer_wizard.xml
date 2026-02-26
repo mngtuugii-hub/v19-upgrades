@@ -6,7 +6,7 @@
             <field name="model">printnode.installer</field>
             <field name="arch" type="xml">
                 <form string='Direct Print Client Installer'>
-                    <field invisible="1" name="state"/>
+                    <field invisible="1" name="state"/> <!-- Required because it is used in the invisible condition above -->
 
                     <h1>App Installed</h1>
                     <div invisible="state != 'introduction'">

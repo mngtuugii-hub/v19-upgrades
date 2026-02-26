@@ -2,22 +2,24 @@
 <templates xml:space="preserve">
 
 <t t-name="printnode_base.DirectPrintStatusMenu">
-    <Dropdown autoOpen="false" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="directPrintStatusMenuSystray.menuClass" class="directPrintStatusMenuSystray.class">
-        <t t-set-slot="toggler">
-            <i class="fa fa-lg fa-print" role="img" aria-label="Direct Print Status Menu"></i>
-            <span t-if="state.releases.length and state.isManager">
-                <span class="DirectPrintStatusMenu_badge badge rounded-pill">!</span>
-            </span>
-        </t>
-        <t t-set-slot="default">
-            <t t-call="printnode_base.DirectPrintStatusMenu.content"/>
-        </t>
-    </Dropdown>
+    <div t-att-class="directPrintStatusMenuSystray.class">
+        <Dropdown state="dropdown" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="directPrintStatusMenuSystray.menuClass">
+            <button>
+                <i class="fa fa-lg fa-print" role="img" aria-label="Direct Print Status Menu"></i>
+                <span t-if="state.releases.length and state.isManager">
+                    <span class="DirectPrintStatusMenu_badge badge rounded-pill">!</span>
+                </span>
+            </button>
+            <t t-set-slot="content">
+                <t t-call="printnode_base.DirectPrintStatusMenu.content"/>
+            </t>
+        </Dropdown>
+    </div>
 </t>
 
 <t t-name="printnode_base.DirectPrintStatusMenu.content">
     <div t-att-class="`p-3 ${directPrintStatusMenuSystray.contentClass} o-printnode_base-StatusMenu`">
-        <t t-if="state.directPrintEnabled">
+        <t t-if="state.dpc_company_enabled and state.dpc_user_enabled">
             <!-- Loader -->
             <t t-if="!state.loaded">
                 <i class="DirectPrintStatusMenu_loading fa fa-circle-o-notch fa-spin"/>
@@ -126,7 +128,7 @@
             </t>
         </t>
 
-        <t t-if="!state.directPrintEnabled">
+        <t t-if="!state.dpc_company_enabled or !state.dpc_user_enabled">
             <div class="alert alert-danger mb-0" role="alert">
                 <h5>Direct Print PRO module is disabled</h5>
                 <p>Please enable it on the company level (Direct Print → Settings page) and in user settings (User → Preferences).</p>
@@ -134,7 +136,7 @@
         </t>
     </div>
     <div t-if="ui.isSmall" class="o-printnode_base-StatusMenu-navbar d-flex border-top bg-view shadow-lg w-100 btn-group">
-        
+
     </div>
 </t>
 

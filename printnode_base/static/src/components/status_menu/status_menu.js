@@ -1,14 +1,15 @@
 /* @odoo-module */
 
-import { browser } from "@web/core/browser/browser";
-import { session } from "@web/session";
-
 import { Component, onWillRender, useState } from "@odoo/owl";
-
+import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
+import { session } from "@web/session";
+
+
 
 const MANAGER_GROUP = "printnode_base.printnode_security_group_manager";
 
@@ -50,7 +51,7 @@ export class DirectPrintStatusMenu extends Component {
         });
 
         this.orm = useService("orm");
-        this.user = useService("user");
+        this.user = user;
 
         onWillRender(async () => {
             if (!this.state.loaded) {
@@ -67,6 +68,8 @@ export class DirectPrintStatusMenu extends Component {
                     this.state.releases = data.releases;
                     this.state.devices = data.devices;
                     this.state.workstations = data.workstations;
+                    this.state.dpc_company_enabled = data.dpc_company_enabled;
+                    this.state.dpc_user_enabled = data.dpc_user_enabled;
                 }
 
                 this.state.loaded = true;
@@ -118,7 +121,7 @@ export class DirectPrintStatusMenu extends Component {
             browser.localStorage.removeItem("printnode_base.workstation_id");
 
             if ("printnode_workstation_id" in this.user.context) {
-                this.user.removeFromContext("printnode_workstation_id");
+                delete this.user.context.printnode_workstation_id;
             }
         }
 

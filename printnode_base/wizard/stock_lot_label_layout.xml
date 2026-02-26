@@ -9,7 +9,7 @@
             <xpath expr="//footer" position="before">
                 <group>
                     <group>
-                        <field name="is_dpc_enabled" invisible="1" />
+                        <field name="is_dpc_enabled" invisible="1" /> <!-- Required because it is used in the invisible condition above -->
                         <field name="printer_id" invisible="is_dpc_enabled == False"/>
                         <field name="printer_bin" invisible="is_dpc_enabled == False"/>
                     </group>

@@ -5,7 +5,8 @@ import inspect
 import logging
 import psycopg2
 
-from odoo import api, fields, models, registry, SUPERUSER_ID
+from odoo import api, fields, models, SUPERUSER_ID
+from odoo.modules.registry import Registry
 
 _logger = logging.getLogger(__name__)
 
@@ -61,7 +62,7 @@ class PrintNodeLoggerMixin(models.AbstractModel):
         """
         self.env['ir.logging'].flush_model()
         try:
-            db_registry = registry(db_name)
+            db_registry = Registry(db_name)
             with db_registry.cursor() as cr:
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 env['ir.logging'].sudo().create(logging_object)
@@ -95,6 +96,7 @@ class PrintNodeLogType(models.Model):
         required=True,
     )
 
-    _sql_constraints = [
-        ('name', 'unique(name)', 'Log type already exists!'),
-    ]
+    _unique_name = models.Constraint(
+        'UNIQUE(name)',
+        'Log type already exists!',
+    )

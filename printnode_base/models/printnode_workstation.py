@@ -28,9 +28,10 @@ class PrintnodeWorkstation(models.Model):
         string='Default Workstation Scales',
     )
 
-    _sql_constraints = [
-        ('name', 'unique(name)', 'Workstation name must be unique'),
-    ]
+    _unique_name = models.Constraint(
+        'UNIQUE(name)',
+        'Workstation name must be unique',
+    )
 
     @api.model
     def get_workstation_devices(self):

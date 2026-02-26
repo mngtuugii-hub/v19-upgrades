@@ -32,8 +32,6 @@ class TestPrintNodeIrCron(TestPrintNodeCommon):
             'code': 'model.search([("name", "=", "Test Stock Picking")]).button_validate()',
             'interval_number': 1,
             'interval_type': 'days',
-            'numbercall': 1,
-            'doall': False,
         })
 
         # Create Mock objects
@@ -67,7 +65,7 @@ class TestPrintNodeIrCron(TestPrintNodeCommon):
 
         self.assertFalse(self.product_id.stock_quant_ids)
 
-        self.cron._callback(self.cron.name, self.cron.ir_actions_server_id.id, "New_job_id")
+        self.cron._callback(self.cron.name, self.cron.ir_actions_server_id.id)
 
         self.assertEqual(
             self.product_id.stock_quant_ids.filtered(
@@ -96,7 +94,7 @@ class TestPrintNodeIrCron(TestPrintNodeCommon):
 
         self.assertFalse(self.product_id.stock_quant_ids)
 
-        self.cron._callback(self.cron.name, self.cron.ir_actions_server_id.id, "New_job_id")
+        self.cron._callback(self.cron.name, self.cron.ir_actions_server_id.id)
 
         self.assertEqual(
             self.product_id.stock_quant_ids.filtered(
@@ -121,7 +119,7 @@ class TestPrintNodeIrCron(TestPrintNodeCommon):
 
         self.assertFalse(self.product_id.stock_quant_ids)
 
-        self.cron._callback(self.cron.name, self.cron.ir_actions_server_id.id, "New_job_id")
+        self.cron._callback(self.cron.name, self.cron.ir_actions_server_id.id)
 
         self.assertEqual(
             self.product_id.stock_quant_ids.filtered(
@@ -148,7 +146,7 @@ class TestPrintNodeIrCron(TestPrintNodeCommon):
 
         self.assertFalse(self.product_id.stock_quant_ids)
 
-        self.cron._callback(self.cron.name, self.cron.ir_actions_server_id.id, "New_job_id")
+        self.cron._callback(self.cron.name, self.cron.ir_actions_server_id.id)
 
         self.assertEqual(
             self.product_id.stock_quant_ids.filtered(

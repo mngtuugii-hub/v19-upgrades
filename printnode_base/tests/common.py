@@ -59,7 +59,7 @@ class TestPrintNodeCommon(common.TransactionCase):
             'company_id': self.company.id,
             'login': 'user',
             'email': 'user@print.node',
-            'groups_id': [(6, 0, [
+            'group_ids': [(6, 0, [
                 self.env.ref(SECURITY_GROUP).id,
                 self.env.ref(BASE_INTERNAL_USER_GROUP).id,
             ])]
@@ -193,14 +193,14 @@ class TestPrintNodeCommon(common.TransactionCase):
             'name': 'Test Delivery Carrier',
             'product_id': self.env['product.product'].create({
                 'name': 'Test Product',
-                'type': 'product',
+                'is_storable': True,
             }).id,
         })
 
         # Products
         self.product_id = self.env['product.product'].create({
             'name': 'Test Product',
-            'type': 'product',
+            'is_storable': True,
         })
 
         # Locations
@@ -226,7 +226,6 @@ class TestPrintNodeCommon(common.TransactionCase):
 
         # Stock move
         self.stock_move = self.env['stock.move'].create({
-            'name': 'Test move',
             'product_id': self.product_id.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': self.location_dest.id,

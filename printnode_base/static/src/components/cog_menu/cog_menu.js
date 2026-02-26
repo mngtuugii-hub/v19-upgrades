@@ -1,11 +1,14 @@
 /** @odoo-module **/
 
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
-import { FormController } from "@web/views/form/form_controller";
 import { session } from "@web/session";
+import { FormController } from "@web/views/form/form_controller";
 
 
 class DownloadCogMenu extends CogMenu {
+  static props = {
+        ...CogMenu.props,
+  };
 
   async setup() {
     await super.setup(...arguments);
@@ -13,6 +16,10 @@ class DownloadCogMenu extends CogMenu {
   }
 
   get downloadItems() {
+    if (!this.dpcEnabled) {
+      return [];
+    }
+
     const printActions = this.props.items.print || [];
     return printActions.map((action) => ({
       action: { ...action, download_only: true },

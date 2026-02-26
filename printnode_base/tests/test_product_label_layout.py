@@ -66,7 +66,7 @@ class TestProductLabelLayout(TestPrintNodeCommon):
         for i in range(1, 6):
             product = self.env['product.product'].create({
                 'name': f'product_{i}',
-                'type': 'product',
+                'is_storable': True,
             })
             qty = randint(1, 5)
             total_qty += qty
