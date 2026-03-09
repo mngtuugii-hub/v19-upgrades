@@ -7,15 +7,12 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@name='access_rights']" position="inside">
-<!--                    <page string="Inventory Restrictions" name="inventory_restrictions"-->
-<!--                          groups="stock.group_stock_manager">-->
+                    <group>
                         <group>
-                            <group>
-                                <field name="allowed_picking_type_ids" widget="many2many_tags"
-                                       options="{'no_create_edit': True, 'no_create': True}"/>
-                            </group>
+                            <field name="allowed_picking_type_ids" widget="many2many_tags"
+                                   options="{'no_create_edit': True, 'no_create': True}"/>
                         </group>
-<!--                    </page>-->
+                    </group>
                 </xpath>
             </field>
         </record>

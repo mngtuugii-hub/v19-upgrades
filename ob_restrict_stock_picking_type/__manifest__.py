@@ -12,7 +12,7 @@
     'summary': """This module allow you to define allowed operation types for users. User can see only the allowed operation types and 
     related transfers only
 """,
-    'version': '17.0',
+    'version': '19.0',
     'license': 'OPL-1',
     'depends': ['stock'],
     'category': 'Inventory/Inventory',
@@ -27,6 +27,6 @@
     "price": 20,
     "currency": 'USD',
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
 }
