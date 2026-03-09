@@ -1,0 +1,21 @@
+<odoo>
+    <record id="view_picking_form_inherit_original_so_tug" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.original.so.tug</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//form/sheet/group" position="inside">
+                <group name="original_sale_order_group" string="Sales Order Details">
+                    <field name="original_sale_order_id" readonly="1"/>
+                    <field name="sale_order_ref" readonly="1"/>
+                    <field name="sale_order_partner_id" readonly="1"/>
+                </group>
+                <group name="special_instruction_group" string="Special Notes">
+                    <field name="internal_production_note"/>  
+                </group>          
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
