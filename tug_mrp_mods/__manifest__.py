@@ -1,9 +1,9 @@
 {
     'name': 'Tug: Manufacturing Order: Mods, Reports',
-    'version': '2.11', # Bumped version
+    'version': '19.0.2.11',
     'category': 'Manufacturing',
     'summary': 'Custom Manufacturing Order Reports & Email Wizard',
-    'depends': ['mrp', 'mail', 'stock'], # Added 'stock' back as we are modifying Transfers
+    'depends': ['mrp', 'mail', 'stock'],
     'data': [
         'security/ir.model.access.csv',
         'reports/report_action.xml',
@@ -11,7 +11,7 @@
         'data/printnode_setup_action.xml',
         'wizard/mrp_report_wizard_view.xml',
         'views/mrp_view.xml',
-        'views/stock_picking_view.xml', # Added Picking View
+        'views/stock_picking_view.xml',
         'reports/report_internal_template.xml',
         'reports/report_external_template.xml',
         'reports/report_package_zpl_template.xml',

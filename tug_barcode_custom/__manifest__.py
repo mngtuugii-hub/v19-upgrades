@@ -1,6 +1,6 @@
 {
     'name': 'Tug Barcode Custom',
-    'version': '1.0',
+    'version': '19.0.1.0',
     'summary': 'Scan packages, view contents, and move them efficiently.',
     'category': 'Inventory/Inventory',
     'author': 'Custom',

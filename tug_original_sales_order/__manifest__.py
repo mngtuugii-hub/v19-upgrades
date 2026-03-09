@@ -1,5 +1,3 @@
-# tug_original_sales_order/__manifest__.py
-
 {
     'name': "Tug: Original Sales Order Tracer",
     'summary': """
@@ -13,17 +11,17 @@
     'author': "Tug",
     'website': "http://www.yourcompany.com",
     'category': 'Sales/Purchase',
-    'version': '17.0.1.0.0',
+    'version': '19.0.1.0.0',
     'depends': [
         'purchase',     
         'sale_management', 
         'mrp',          
-        'stock',        # <--- ADD 'stock' dependency
+        'stock',
     ],
     'data': [
         'views/purchase_order_views.xml',
         'views/mrp_production_views.xml',
-        'views/stock_picking_views.xml', # <--- ADD THIS LINE
+        'views/stock_picking_views.xml',
     ],
     'installable': True,
     'application': False,
