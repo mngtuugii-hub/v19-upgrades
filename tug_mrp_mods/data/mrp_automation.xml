@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Server Action to Trigger the Report -->
+    <record id="action_server_print_zpl_mrp" model="ir.actions.server">
+        <field name="name">Generate ZPL Labels</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="state">code</field>
+        <field name="code">
+# Trigger the ZPL Report Action
+# If using PrintNode/Direct Print, ensure it is configured to catch this report action.
+action = env.ref('tug_mrp_mods.action_report_mrp_package_zpl').report_action(record)
+        </field>
+    </record>
+
+    <!-- Automation Rule: Trigger when MO state becomes 'Done' -->
+    <record id="automation_print_zpl_on_done" model="base.automation">
+        <field name="name">Auto-Print ZPL on MO Done</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="trigger">on_write</field>
+        <field name="active">True</field>
+        
+        <!-- Trigger only when 'state' field changes -->
+        <field name="trigger_field_ids" eval="[(4, ref('mrp.field_mrp_production__state'))]"/>
+        
+        <!-- Logic: Was NOT done, IS now done -->
+        <field name="filter_pre_domain">[('state', '!=', 'done')]</field>
+        <field name="filter_domain">[('state', '=', 'done')]</field>
+        
+        <!-- Execute the server action defined above -->
+        <field name="action_server_ids" eval="[(4, ref('action_server_print_zpl_mrp'))]"/>
+    </record>
+</odoo>

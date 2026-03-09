@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_setup_printnode_zpl_scenario" model="ir.actions.server">
+        <field name="name">Setup ZPL Print Scenario</field>
+        <field name="model_id" ref="base.model_ir_actions_server"/>
+        <field name="state">code</field>
+        <field name="code">
+# =========================================================
+# CONFIGURATION: Change this to match your printer's name
+printer_search_term = 'WH3_OFFICE2'
+# =========================================================
+
+# 1. Check if Direct Print is installed
+if 'printnode.scenario' not in env:
+    raise UserError("The Direct Print (printnode) app is not installed.")
+
+# 2. Find the Report
+report_ref = 'tug_mrp_mods.action_report_mrp_package_zpl'
+report = env.ref(report_ref, raise_if_not_found=False)
+if not report:
+    raise UserError(f"Report {report_ref} not found. Please upgrade the module first.")
+
+# 3. Find the Printer
+# Search for a printer matching the name
+printer = env['printnode.printer'].search([('name', 'ilike', printer_search_term)], limit=1)
+
+# If not found, try to grab the first available printer as a fallback
+if not printer:
+    printer = env['printnode.printer'].search([], limit=1)
+
+if not printer:
+    raise UserError("No printers found in Odoo. Please add a printer in Direct Print app first.")
+
+# 4. Create the Scenario
+mrp_model = env['ir.model']._get('mrp.production')
+
+# Check if it already exists to avoid duplicates
+existing = env['printnode.scenario'].search([
+    ('model_id', '=', mrp_model.id),
+    ('report_id', '=', report.id),
+    ('printer_id', '=', printer.id),
+    ('domain', '=', "[('state', '=', 'done')]")
+])
+
+if not existing:
+    env['printnode.scenario'].create({
+        'name': f"Auto ZPL on MO Done ({printer.name})",
+        'model_id': mrp_model.id,
+        'report_id': report.id,
+        'printer_id': printer.id,
+        'action_type': 'print_report',
+        'domain': "[('state', '=', 'done')]",
+        'active': True,
+    })
+    action = {
+        'type': 'ir.actions.client',
+        'tag': 'display_notification',
+        'params': {
+            'title': 'Success',
+            'message': f"Scenario created successfully for printer: {printer.name}",
+            'type': 'success',
+            'sticky': False,
+        }
+    }
+else:
+    action = {
+        'type': 'ir.actions.client',
+        'tag': 'display_notification',
+        'params': {
+            'title': 'Info',
+            'message': "This scenario already exists.",
+            'type': 'warning',
+            'sticky': False,
+        }
+    }
+        </field>
+    </record>
+</odoo>
