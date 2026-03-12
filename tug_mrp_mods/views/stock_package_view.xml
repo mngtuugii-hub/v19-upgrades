@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_quant_package_form_inherit_tug" model="ir.ui.view">
+        <field name="name">stock.package.form.inherit.tug</field>
+        <field name="model">stock.package</field>
+        <field name="inherit_id" ref="stock.view_quant_package_form"/>
+        <field name="arch" type="xml">
+            <!-- SAFE FIX: Inserting a header block before the sheet ensures the button is at the top, even if standard Odoo 19 removes the package header -->
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="%(tug_mrp_mods.action_report_stock_package_zpl)d" 
+                            type="action" 
+                            string="Print SSCC" 
+                            class="btn btn-primary"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_mrp_external" model="mail.template">
+        <field name="name">Manufacturing Order: External Report</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="subject">Manufacturing Order {{ object.name }} - Finished Goods</field>
+        <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+        <field name="description">Sent to customers/partners when MO is done</field>
+        <field name="body_html" type="html">
+            <table border="0" cellpadding="0" cellspacing="0" style="background-color: #F4F4F4; font-family: Helvetica, Arial, sans-serif; width: 100%; padding: 20px;">
+                <tr>
+                    <td align="center">
+                        <table border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff; width: 100%; max-width: 600px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <tr>
+                                <td style="background-color: #333333; padding: 20px; text-align: center;">
+                                    <h2 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: bold;">Order Complete</h2>
+                                    <p style="margin: 5px 0 0; color: #dddddd; font-size: 14px;">Manufacturing Order: <t t-out="object.name"/></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 30px 20px;">
+                                    <p style="margin: 0 0 20px; font-size: 16px; color: #333333; line-height: 1.5;">
+                                        Dear <strong style="color: #000;">Customer</strong>,
+                                    </p>
+                                    <p style="margin: 0 0 20px; font-size: 16px; color: #555555; line-height: 1.5;">
+                                        We are pleased to inform you that production is complete. The details of the finished goods are attached to this email.
+                                    </p>
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f8f9fa; border-left: 5px solid #007bff; margin-bottom: 25px;">
+                                        <tr>
+                                            <td style="padding: 15px;">
+                                                <div style="margin-bottom: 10px;">
+                                                    <span style="font-size: 12px; text-transform: uppercase; color: #888; letter-spacing: 1px;">Product</span><br/>
+                                                    <strong style="font-size: 18px; color: #333;"><t t-out="object.product_id.display_name"/></strong>
+                                                </div>
+                                                <div style="margin-bottom: 10px;">
+                                                    <span style="font-size: 12px; text-transform: uppercase; color: #888; letter-spacing: 1px;">Quantity Produced</span><br/>
+                                                    <strong style="font-size: 18px; color: #333;"><t t-out="object.qty_produced"/> <t t-out="object.product_uom_id.name"/></strong>
+                                                </div>
+                                                <div>
+                                                    <span style="font-size: 12px; text-transform: uppercase; color: #888; letter-spacing: 1px;">Reference</span><br/>
+                                                    <span style="font-size: 16px; color: #333;"><t t-out="object.origin or 'N/A'"/></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p style="margin: 0 0 10px; font-size: 16px; color: #555555; line-height: 1.5;">
+                                        Please see the attached PDF for the full specification and packaging details.
+                                    </p>
+                                    <p style="margin: 20px 0 0; font-size: 16px; color: #555555; line-height: 1.5;">
+                                        Best regards,<br/>
+                                        <strong style="color: #333;"><t t-out="user.name"/></strong>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #eeeeee; padding: 15px; text-align: center; font-size: 12px; color: #999999;">
+                                    Sent automatically by Odoo
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </field>
+    </record>
+</odoo>

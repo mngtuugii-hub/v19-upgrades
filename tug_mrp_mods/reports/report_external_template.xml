@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_mrp_external_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: #333;">
+                        
+                        <div class="row mb-4" style="border-bottom: 2px solid #222; padding-bottom: 15px;">
+                            <div class="col-8">
+                                <h4 class="text-uppercase text-muted mb-0" style="letter-spacing: 2px; font-size: 14px;">Manufacturing Order</h4>
+                                <h1 class="mt-0" style="font-size: 32px; font-weight: 900; color: #000;">
+                                    <span t-field="o.name"/>
+                                </h1>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div style="display: inline-block; overflow: hidden;">
+                                    <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%; height:50px;'}"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-5">
+                            <div class="col-7">
+                                <div class="p-3" style="background-color: #f8f9fa; border-left: 5px solid #333; height: 100%;">
+                                    <strong class="text-uppercase text-muted" style="font-size: 11px;">Product to Produce</strong>
+                                    <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">
+                                        <span t-field="o.product_id.name"/>
+                                    </div>
+                                    <strong class="text-uppercase text-muted" style="font-size: 11px;">Code</strong>
+                                    <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">
+                                        <span t-field="o.product_id.default_code"/>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <strong class="text-uppercase text-muted" style="font-size: 11px;">Target Qty</strong>
+                                            <div style="font-size: 24px; font-weight: 600; color: #000;">
+                                                <span t-field="o.product_qty" t-options='{"precision": 3}'/> <span t-field="o.product_uom_id.name" style="font-size: 14px; color: #666;"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <strong class="text-uppercase text-muted" style="font-size: 11px;">Produced Qty</strong>
+                                            <div style="font-size: 24px; font-weight: 900; color: #000;">
+                                                <span t-field="o.qty_produced" t-options='{"precision": 3}'/> <span t-field="o.product_uom_id.name" style="font-size: 14px; color: #666;"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <strong class="text-uppercase text-muted" style="font-size: 11px;">Date Planned</strong>
+                                            <div style="font-size: 16px; font-weight: bold;">
+                                                <span t-field="o.date_start" t-options='{"widget": "date"}'/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-5">
+                                <div class="p-3" style="border: 1px solid #ddd; height: 100%;">
+                                    <div class="mb-3">
+                                        <strong class="text-uppercase text-muted" style="font-size: 11px;">Ref / Customer</strong><br/>
+                                        <span t-if="o.original_sale_order_id">
+                                            <strong>WF SO:</strong> <span t-field="o.original_sale_order_id.name"/>
+                                        </span>
+                                        <span t-else="">
+                                            <strong>WF Source:</strong> <span t-field="o.origin"/>
+                                        </span><br/>
+                                        <span t-if="o.sale_order_partner_id">
+                                            <span t-field="o.sale_order_partner_id.name"/>
+                                        </span><br/>
+                                        <span t-if="o.sale_order_ref">
+                                            <strong>Cust PO:</strong> <span t-field="o.sale_order_ref"/>
+                                        </span>
+                                        <span t-else="">
+                                            <strong>Cust Ref:</strong> <span t-field="o.origin"/>
+                                        </span>
+                                    </div>
+
+                                    <t t-set="main_lot" t-value="o.lot_producing_ids[0] if o.lot_producing_ids else False"/>
+                                    <t t-if="main_lot">
+                                        <div class="p-2" style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <strong style="font-size: 11px;">LOT / BATCH:</strong><br/>
+                                                    <span style="font-size: 16px; font-weight: bold;" t-out="main_lot.name"/>
+                                                </div>
+                                            </div>
+                                            <t t-if="main_lot.expiration_date">
+                                                <div class="row">
+                                                    <div class="col-12 mt-2">
+                                                        <strong style="font-size: 11px;">EXPIRY DATE (BBD):</strong><br/>
+                                                        <span style="font-size: 16px; font-weight: bold;" 
+                                                              t-out="main_lot.expiration_date" 
+                                                              t-options='{"widget": "date"}'/>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+
+                        <t t-if="o.internal_production_note">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="alert alert-info" role="alert" style="background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460;">
+                                        <strong>⚠ Special Instructions:</strong> <span t-field="o.internal_production_note"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 style="border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 10px;">Bill of Materials / Components</h5>
+                                <table class="table table-sm table-bordered" style="border: 1px solid #949494ff;">
+                                    <thead style="background-color: #eee;">
+                                        <tr>
+                                            <th style="width: 10%; border-top: none;">Component Code</th>
+                                            <th style="width: 30%; border-top: none;">Name</th>
+                                            <th class="text-end" style="width: 15%; border-top: none;">Required</th>
+                                            <th class="text-end" style="width: 20%; border-top: none;">Consumed (Actual)</th>
+                                            <th style="width: 25%; border-top: none;">Lot / Serial Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.move_raw_ids" t-as="line">
+                                            <td style="vertical-align: middle;">
+                                                <span style="font-weight: 600;" t-field="line.product_id.default_code"/>
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <span style="font-weight: 600;" t-field="line.product_id.name"/>
+                                            </td>
+                                            <td class="text-end" style="vertical-align: middle;">
+                                                <span t-field="line.product_uom_qty"/> <span t-field="line.product_uom.name"/>
+                                            </td>
+                                            <td class="text-end" style="vertical-align: middle;">
+                                                <t t-if="o.state == 'done'">
+                                                    <span t-esc="sum(line.move_line_ids.mapped('quantity'))" t-options='{"widget": "float", "precision": 3}'/>
+                                                </t>
+                                                <t t-else="">
+                                                    <div style="border-bottom: 1px solid #ccc; width: 100%; height: 24px;"></div>
+                                                </t>
+                                            </td>
+                                            <td style="vertical-align: middle;">
+                                                <t t-set="lines_with_lots" t-value="line.move_line_ids.filtered(lambda ml: ml.lot_id)"/>
+                                                <t t-if="lines_with_lots">
+                                                    <t t-foreach="lines_with_lots" t-as="ml">
+                                                        <div style="border-bottom: 1px dashed #ccc; padding-bottom: 2px; margin-bottom: 2px;">
+                                                            <span t-field="ml.lot_id.name"/>
+                                                            <span> 
+                                                                (<span t-field="ml.quantity" t-options='{"widget": "float", "precision": 3}'/> <span t-field="ml.product_uom_id.name"/>)
+                                                            </span>
+                                                            <t t-if="ml.lot_id.expiration_date">
+                                                                <br/>
+                                                                <span class="text-muted" style="font-size: 0.9em; font-style: italic;">
+                                                                    Exp: <span t-field="ml.lot_id.expiration_date" t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
+                                                                </span>
+                                                            </t>
+                                                        </div>
+                                                    </t>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr style="font-weight: bold; background-color: #f8f9fa; border-top: 2px solid #333;">
+                                            <td style="vertical-align: middle;" colspan="2" class="text-end">Total:</td>
+                                            <td class="text-end">
+                                                <span t-esc="sum(o.move_raw_ids.mapped('product_uom_qty'))" t-options='{"widget": "float", "precision": 3}'/>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-esc="sum(o.move_raw_ids.move_line_ids.mapped('quantity'))" t-options='{"widget": "float", "precision": 3}'/>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <t t-if="o.scrap_ids">
+                            <div class="row mt-5">
+                                <div class="col-12">
+                                    <h5 style="color: #dc3545; border-bottom: 2px solid #dc3545; padding-bottom: 5px; margin-bottom: 10px;">
+                                        ⚠ Scrapped Components
+                                    </h5>
+                                    <table class="table table-sm table-bordered" style="border: 1px solid #e9ecef;">
+                                        <thead style="background-color: #eee;">
+                                            <tr>
+                                                <th style="width: 10%;">Product Code</th>
+                                                <th style="width: 35%;">Name</th>
+                                                <th style="width: 20%;">Lot / Expiry</th>
+                                                <th class="text-end" style="width: 15%;">Quantity</th>
+                                                <th style="width: 20%;">Origin / Reason</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="o.scrap_ids" t-as="scrap">
+                                                <td><span t-field="scrap.product_id.default_code"/></td>
+                                                <td><span t-field="scrap.product_id.name"/></td>
+                                                <td>
+                                                    <t t-if="scrap.lot_id">
+                                                        <div style="font-weight: bold;">
+                                                            <span t-field="scrap.lot_id.name"/>
+                                                        </div>
+                                                        <t t-if="scrap.lot_id.expiration_date">
+                                                            <div class="text-muted" style="font-size: 0.9em; font-style: italic;">
+                                                                Exp: <span t-field="scrap.lot_id.expiration_date" t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>
+                                                            </div>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">-</t>
+                                                </td>
+                                                <td class="text-end"><span t-field="scrap.scrap_qty"/> <span t-field="scrap.product_uom_id.name"/></td>
+                                                <td><span t-field="scrap.origin"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t t-set="finished_moves" t-value="o.move_finished_ids.filtered(lambda m: m.state == 'done')"/>
+                        <t t-if="finished_moves">
+                            <div class="row mt-5">
+                                <div class="col-12">
+                                    <h5 style="border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 10px;">
+                                        Production Output (To Stock)
+                                    </h5>
+                                    <table class="table table-sm table-bordered" style="border: 1px solid #949494ff;">
+                                        <thead style="background-color: #eee;">
+                                            <tr>
+                                                <th style="width: 25%;">Package</th>
+                                                <th style="width: 25%;">Dimensions (L x W x H)</th>
+                                                <th style="width: 15%;">Weight</th>
+                                                <th style="width: 20%;">Destination</th>
+                                                <th class="text-end" style="width: 15%;">Total:</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="all_lines" t-value="finished_moves.mapped('move_line_ids')"/>
+                                            <t t-set="packages" t-value="all_lines.mapped('result_package_id')"/>
+                                            
+                                            <t t-foreach="packages" t-as="pkg">
+                                                <t t-set="pkg_lines" t-value="all_lines.filtered(lambda l: l.result_package_id == pkg)"/>
+                                                <tr>
+                                                    <td style="vertical-align: middle; font-weight: bold;">
+                                                        <span t-field="pkg.name"/>
+                                                        <div t-if="pkg.package_type_id" style="font-weight: normal; font-size: 0.9em; color: #666;">
+                                                            Type: <span t-field="pkg.package_type_id.name"/>
+                                                        </div>
+                                                    </td>
+                                                    <td style="vertical-align: middle;">
+                                                        <t t-if="pkg.package_type_id">
+                                                            <span t-field="pkg.package_type_id.packaging_length"/> x 
+                                                            <span t-field="pkg.package_type_id.width"/> x 
+                                                            <span t-field="pkg.package_type_id.height"/> mm
+                                                        </t>
+                                                        <t t-else="">-</t>
+                                                    </td>
+                                                    <td style="vertical-align: middle;">
+                                                        <t t-if="pkg.shipping_weight > 0">
+                                                            <span t-field="pkg.shipping_weight"/> kg
+                                                        </t>
+                                                        <t t-else="">-</t>
+                                                    </td>
+                                                    <td style="vertical-align: middle;">
+                                                        <t t-set="pkg_locs" t-value="pkg_lines.mapped('location_dest_id.display_name')"/>
+                                                        <span t-esc="', '.join(set(pkg_locs))"/>
+                                                    </td>
+                                                    <td class="text-end" style="vertical-align: middle;">
+                                                        <span t-esc="sum(pkg_lines.mapped('quantity'))" t-options='{"widget": "float", "precision": 3}'/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+
+                                            <t t-set="no_pkg_lines" t-value="all_lines.filtered(lambda l: not l.result_package_id)"/>
+                                            <t t-if="no_pkg_lines">
+                                                <t t-set="loose_locations" t-value="no_pkg_lines.mapped('location_dest_id')"/>
+                                                <t t-foreach="loose_locations" t-as="loc">
+                                                    <t t-set="loc_lines" t-value="no_pkg_lines.filtered(lambda l: l.location_dest_id == loc)"/>
+                                                    <tr>
+                                                        <td style="vertical-align: middle;" class="text-muted"><i style="font-style: italic;">No Package</i></td>
+                                                        <td class="text-muted">-</td>
+                                                        <td class="text-muted">-</td>
+                                                        <td style="vertical-align: middle;"><span t-field="loc.display_name"/></td>
+                                                        <td class="text-end" style="vertical-align: middle;">
+                                                            <span t-esc="sum(loc_lines.mapped('quantity'))" t-options='{"widget": "float", "precision": 3}'/>
+                                                            <span t-esc="loc_lines[0].product_uom_id.name"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+
+                        <t t-set="store_moves" t-value="o.move_finished_ids.move_dest_ids.filtered(lambda m: m.state != 'cancel')"/>
+                        <t t-set="pickings" t-value="store_moves.mapped('picking_id')"/>
+                        <t t-if="pickings">
+                            <div class="row mt-5">
+                                <div class="col-12">
+                                    <h5 style="border-bottom: 2px solid #333; padding-bottom: 5px; margin-bottom: 10px;">
+                                        Ready to Dispatch for Purchase Order
+                                    </h5>
+                                    <t t-foreach="pickings" t-as="picking">
+                                        <div class="mb-2 mt-3">
+                                            <strong>Transfer: <span t-field="picking.name"/></strong>
+                                        </div>
+                                        <table class="table table-sm table-bordered" style="border: 1px solid #949494ff;">
+                                            <thead style="background-color: #eee;">
+                                                <tr >
+                                                    <th style="width: 25%;">Package</th>
+                                                    <th class="text-end" style="width: 15%;">Qty</th>
+                                                    <th style="width: 35%;">Lots / Serials</th>
+                                                    <th style="width: 25%;">Dimensions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-set="picking_lines" t-value="picking.move_line_ids"/>
+                                                <t t-set="picking_packages" t-value="picking_lines.mapped('result_package_id')"/>
+                                                
+                                                <t t-foreach="picking_packages" t-as="pkg">
+                                                    <t t-set="pkg_lines" t-value="picking_lines.filtered(lambda l: l.result_package_id == pkg)"/>
+                                                    <tr>
+                                                        <td style="vertical-align: middle; font-weight: bold;">
+                                                            <span t-field="pkg.name"/>
+                                                            <div t-if="pkg.package_type_id" style="font-weight: normal; font-size: 0.9em; color: #666;">
+                                                                <span t-field="pkg.package_type_id.name"/>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-end" style="vertical-align: middle;">
+                                                            <span t-esc="sum(pkg_lines.mapped('quantity'))" t-options='{"widget": "float", "precision": 3}'/>
+                                                            <span t-esc="pkg_lines[0].product_uom_id.name"/>
+                                                        </td>
+                                                        <td style="vertical-align: middle;">
+                                                            <t t-foreach="pkg_lines.mapped('lot_id')" t-as="lot">
+                                                                <div>
+                                                                    <span t-field="lot.name"/>
+                                                                    <t t-if="lot.expiration_date">
+                                                                        <span class="text-muted" style="font-size: 0.9em;">
+                                                                             (Exp: <span t-field="lot.expiration_date" t-options='{"widget": "date", "format": "dd/MM/yyyy"}'/>)
+                                                                        </span>
+                                                                    </t>
+                                                                </div>
+                                                            </t>
+                                                        </td>
+                                                        <td style="vertical-align: middle;">
+                                                            <t t-if="pkg.package_type_id">
+                                                                <span t-field="pkg.package_type_id.packaging_length"/> x 
+                                                                <span t-field="pkg.package_type_id.width"/> x 
+                                                                <span t-field="pkg.package_type_id.height"/> mm
+                                                            </t>
+                                                            <t t-else="">-</t>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

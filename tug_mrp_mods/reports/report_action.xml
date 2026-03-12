@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Internal Report Action -->
+    <record id="action_report_mrp_internal" model="ir.actions.report">
+        <field name="name">Internal MO Report</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tug_mrp_mods.report_mrp_internal_template</field>
+        <field name="report_file">tug_mrp_mods.report_mrp_internal_template</field>
+        <field name="print_report_name">'WF Internal MO: - %s' % object.name</field>
+    </record>
+
+    <!-- External Report Action -->
+    <record id="action_report_mrp_external" model="ir.actions.report">
+        <field name="name">External MO Report</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tug_mrp_mods.report_mrp_external_template</field>
+        <field name="report_file">tug_mrp_mods.report_mrp_external_template</field>
+        <field name="print_report_name">'WF External MO: - %s' % object.name</field>
+    </record>
+
+    <!-- ZPL Label Action (Manufacturing) -->
+    <record id="action_report_mrp_package_zpl" model="ir.actions.report">
+        <field name="name">Package Labels (ZPL)</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">tug_mrp_mods.report_mrp_package_zpl_template</field>
+        <field name="report_file">tug_mrp_mods.report_mrp_package_zpl_template</field>
+    </record>
+
+    <!-- ZPL Label Action (Transfers / Delivery) -->
+    <record id="action_report_picking_package_zpl" model="ir.actions.report">
+        <field name="name">Package Labels (ZPL)</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">tug_mrp_mods.report_mrp_package_zpl_template</field>
+        <field name="report_file">tug_mrp_mods.report_mrp_package_zpl_template</field>
+    </record>
+
+    <!-- NEW: Package SSCC ZPL Action for the 'stock.package' Model -->
+    <!-- The binding_model_id property puts it directly in the 'Print' menu of the Package Form! -->
+    <record id="action_report_stock_package_sscc_zpl" model="ir.actions.report">
+        <field name="name">Package SSCC (ZPL)</field>
+        <field name="model">stock.package</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">tug_mrp_mods.report_stock_package_sscc_zpl_template</field>
+        <field name="report_file">tug_mrp_mods.report_stock_package_sscc_zpl_template</field>
+        <field name="binding_model_id" ref="stock.model_stock_package"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

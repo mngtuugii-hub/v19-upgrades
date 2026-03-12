@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_qfm_067" model="ir.actions.report">
+        <field name="name">QFM-067 - Filling: Start-Shut</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tug_mrp_mods.report_qfm_067_template</field>
+        <field name="report_file">tug_mrp_mods.report_qfm_067_template</field>
+        <field name="paperformat_id" ref="paperformat_portrait_label_75dpi"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_qfm_067_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="main_lot" t-value="o.lot_producing_ids[0] if o.lot_producing_ids else False"/>
+
+                <t t-call="web.internal_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #000;">
+                        <div style="border: 2px solid #000;">
+                            
+                            <!-- 1. Document Header -->
+                            <div class="row m-0" style="border-bottom: 2px solid #000;">
+                                <div class="col-3 p-2 d-flex align-items-center justify-content-center" style="border-right: 1px solid #000;">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 50px; max-width: 100%;"/>
+                                    <span t-else="" t-field="o.company_id.name" style="font-weight: bold; font-size: 14px;"/>
+                                </div>
+                                <div class="col-6 p-2 text-center d-flex flex-column justify-content-center" style="border-right: 1px solid #000;">
+                                    <h1 style="margin: 0; font-weight: 900; text-transform: uppercase; font-size: 24px;">Filling: Start-Shut Checklist</h1>
+                                </div>
+                                <div class="col-3 p-1" style="font-size: 10px;">
+                                    <div class="row">
+                                        <div class="col-4 text-right"><strong>Doc No:</strong></div>
+                                        <div class="col-8">QFM-067</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4 text-right"><strong>Rev:</strong></div>
+                                        <div class="col-8">1.0</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4 text-right"><strong>Page:</strong></div>
+                                        <div class="col-8"><span class="page"/> of <span class="topage"/></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Order Information -->
+                            <div class="row m-0" style="background-color: #f0f0f0; border-bottom: 1px solid #000;">
+                                <div class="col-12 p-1 pl-2"><strong>ORDER DETAILS</strong></div>
+                            </div>
+                            <div class="row m-0" style="border-bottom: 2px solid #000;">
+                                <div class="col-6 p-0" style="border-right: 1px solid #000;">
+                                    <div class="p-2">
+                                        <div class="row">
+                                            <div class="col-4"><strong>MO Number:</strong></div>
+                                            <div class="col-8"><span t-field="o.name"/></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-4"><strong>Product:</strong></div>
+                                            <div class="col-8">
+                                                <span t-field="o.product_id.name"/>
+                                                <br/>
+                                                <small t-field="o.product_id.default_code"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 p-0">
+                                    <div class="p-2">
+                                        <div class="row">
+                                            <div class="col-4"><strong>Lot Number:</strong></div>
+                                            <div class="col-8" style="font-weight: bold;"><span t-out="main_lot.name if main_lot else 'N/A'"/></div>
+                                        </div>
+                                        <div class="row mt-1">
+                                            <div class="col-4"><strong>Expiry Date:</strong></div>
+                                            <div class="col-8" style="font-weight: bold;">
+                                                <span t-out="main_lot.expiration_date if main_lot else 'N/A'" t-options='{"widget": "date"}'/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3. Pre-Start Inspections -->
+                            <div class="row m-0" style="background-color: #e9ecef; border-bottom: 1px solid #000;">
+                                <div class="col-12 p-2">
+                                    <strong style="font-size: 14px;">1. LINE PRE-START INSPECTIONS</strong>
+                                    <br/>
+                                    <small><i>Perform inspection before starting the line for each day's production. Initial and date to confirm compliance.</i></small>
+                                </div>
+                            </div>
+                            <table class="table table-bordered mb-0" style="font-size: 11px;">
+                                <thead>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <th style="width: 40%; vertical-align: middle;">Inspection Item</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>No jewellery to be worn (wedding bands are OK)</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>No personal items placed within the line</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>Line clear of previous product, packaging, labels &amp; waste. Bins emptied.</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>Line and machines are clean and sanitised</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Scale Check:</strong> Record Scale No. &amp; Std Weight.
+                                            <br/><span style="font-size: 9px; color: red;">If deviation > 1g, notify supervisor.</span>
+                                        </td>
+                                        <td class="text-center">No:____<br/>Wt:____</td>
+                                        <td class="text-center">No:____<br/>Wt:____</td>
+                                        <td class="text-center">No:____<br/>Wt:____</td>
+                                        <td class="text-center">No:____<br/>Wt:____</td>
+                                        <td class="text-center">No:____<br/>Wt:____</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- 4. Shut Down Inspections -->
+                            <div class="row m-0" style="background-color: #e9ecef; border-top: 2px solid #000; border-bottom: 1px solid #000;">
+                                <div class="col-12 p-2">
+                                    <strong style="font-size: 14px;">2. LINE SHUT DOWN INSPECTIONS</strong>
+                                    <br/>
+                                    <small><i>Perform inspection at the end of each day's production.</i></small>
+                                </div>
+                            </div>
+                            <table class="table table-bordered mb-0" style="font-size: 11px;">
+                                <thead>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <th style="width: 40%; vertical-align: middle;">Inspection Item</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                        <th class="text-center" style="width: 12%;">Date:<br/>__/__</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>All documents are completed</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>All product and components removed from line</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>No labelled cartons returned to warehouse</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>All waste placed in bins</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>Equipment cleaned and sanitised</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>Floor and line area cleaned</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>Cleaning equipment stored correctly</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- 5. Verification -->
+                            <div class="row m-0" style="background-color: #f0f0f0; border-top: 2px solid #000; border-bottom: 1px solid #000;">
+                                <div class="col-12 p-1 pl-2"><strong>VERIFICATION &amp; APPROVAL</strong></div>
+                            </div>
+                            <div class="row m-0 p-3">
+                                <div class="col-4">
+                                    <div style="border-bottom: 1px solid #000; height: 30px; width: 90%;"></div>
+                                    <div style="font-size: 10px; margin-top: 2px;">OPERATOR NAME (PRINT)</div>
+                                </div>
+                                <div class="col-4">
+                                    <div style="border-bottom: 1px solid #000; height: 30px; width: 90%;"></div>
+                                    <div style="font-size: 10px; margin-top: 2px;">SIGNATURE</div>
+                                </div>
+                                <div class="col-4">
+                                    <div style="border-bottom: 1px solid #000; height: 30px; width: 90%;"></div>
+                                    <div style="font-size: 10px; margin-top: 2px;">DATE</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

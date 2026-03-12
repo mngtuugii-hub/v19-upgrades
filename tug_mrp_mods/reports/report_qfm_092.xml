@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_qfm_092" model="ir.actions.report">
+        <field name="name">QFM-092 - Pack Qty</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">tug_mrp_mods.report_qfm_092_template</field>
+        <field name="report_file">tug_mrp_mods.report_qfm_092_template</field>
+        <field name="paperformat_id" ref="paperformat_portrait_label_75dpi"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_qfm_092_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="main_lot" t-value="o.lot_producing_ids[0] if o.lot_producing_ids else False"/>
+
+                <t t-call="web.internal_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #000;">
+                        <div style="border: 2px solid #000;">
+                            
+                            <!-- Header -->
+                            <div class="row m-0" style="border-bottom: 2px solid #000;">
+                                <div class="col-3 p-2 d-flex align-items-center justify-content-center" style="border-right: 1px solid #000;">
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 50px; max-width: 100%;"/>
+                                    <span t-else="" t-field="o.company_id.name" style="font-weight: bold; font-size: 14px;"/>
+                                </div>
+                                <div class="col-6 p-2 text-center d-flex flex-column justify-content-center" style="border-right: 1px solid #000;">
+                                    <h4 style="margin: 0; font-weight: 900; text-transform: uppercase;">Pack Quantity Check Sheet</h4>
+                                </div>
+                                <div class="col-3 p-1" style="font-size: 10px;">
+                                    <div class="row">
+                                        <div class="col-4 text-right"><strong>Doc No:</strong></div>
+                                        <div class="col-8">QFM-092</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4 text-right"><strong>Rev:</strong></div>
+                                        <div class="col-8">1.0</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Details -->
+                            <div class="row m-0" style="background-color: #f0f0f0; border-bottom: 1px solid #000;">
+                                <div class="col-12 p-1 pl-2"><strong>ORDER DETAILS</strong></div>
+                            </div>
+                            <div class="row m-0" style="border-bottom: 2px solid #000;">
+                                <div class="col-6 p-2" style="border-right: 1px solid #000;">
+                                    <div class="row"><div class="col-4">MO Number:</div><div class="col-8"><span t-field="o.name"/></div></div>
+                                    <div class="row"><div class="col-4">Product:</div><div class="col-8"><span t-field="o.product_id.name"/></div></div>
+                                </div>
+                                <div class="col-6 p-2">
+                                    <div class="row"><div class="col-4">Lot/Batch:</div><div class="col-8 font-weight-bold"><span t-out="main_lot.name if main_lot else 'N/A'"/></div></div>
+                                    <div class="row"><div class="col-4">Expiry:</div><div class="col-8 font-weight-bold"><span t-out="main_lot.expiration_date if main_lot else 'N/A'" t-options='{"widget": "date"}'/></div></div>
+                                </div>
+                            </div>
+
+                            <!-- Pack Qty Table -->
+                            <div class="row m-0 mt-3 p-2">
+                                <h5 style="text-decoration: underline;">1. Pack Quantity Check</h5>
+                            </div>
+                            <table class="table table-bordered mb-0" style="font-size: 11px; text-align: center;">
+                                <thead>
+                                    <tr style="background-color: #f8f9fa;">
+                                        <th style="width: 20%;">Date</th>
+                                        <th style="width: 20%;">Time</th>
+                                        <th style="width: 30%;">Qty Produced</th>
+                                        <th style="width: 30%;">Signature</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                    <tr style="height: 35px;"><td/><td/><td/><td/></tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Pallet Qty Table -->
+                            <div class="row m-0 mt-3 p-2">
+                                <h5 style="text-decoration: underline;">2. Pallet Produced Quantity</h5>
+                            </div>
+                            <div class="row m-0">
+                                <div class="col-6">
+                                    <table class="table table-bordered mb-0" style="font-size: 11px; text-align: center;">
+                                        <thead>
+                                            <tr style="background-color: #f8f9fa;">
+                                                <th style="width: 15%;">No</th>
+                                                <th>Date</th>
+                                                <th>Batch</th>
+                                                <th>Qty</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="range(1, 11)" t-as="i">
+                                                <tr style="height: 30px;">
+                                                    <td><span t-esc="i"/></td>
+                                                    <td/><td/><td/>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-6">
+                                    <div style="border: 1px solid #000; height: 100%; padding: 10px;">
+                                        <strong>Notes / Issues:</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

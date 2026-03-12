@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_setup_printnode_zpl_scenario" model="ir.actions.server">
+        <field name="name">Setup ZPL Print Scenario (MO &amp; Transfers)</field>
+        <field name="model_id" ref="base.model_ir_actions_server"/>
+        <field name="state">code</field>
+        <field name="code">
+# CONFIGURATION: Change this to match your printer's name
+printer_search_term = 'ZPL'
+
+# 1. Check if Direct Print is installed
+if 'printnode.scenario' not in env:
+    raise UserError("The Direct Print (printnode) app is not installed.")
+
+# 2. Find the Printer
+printer = env['printnode.printer'].search([('name', 'ilike', printer_search_term)], limit=1)
+if not printer:
+    printer = env['printnode.printer'].search([], limit=1)
+
+if not printer:
+    raise UserError("No printers found in Odoo. Please add a printer in Direct Print app first.")
+
+# =========================================================
+# LOGIC 1: Manufacturing Orders
+# =========================================================
+mrp_report_ref = 'tug_mrp_mods.action_report_mrp_package_zpl'
+mrp_report = env.ref(mrp_report_ref, raise_if_not_found=False)
+
+if mrp_report:
+    mrp_model = env['ir.model']._get('mrp.production')
+    existing_mrp = env['printnode.scenario'].search([
+        ('model_id', '=', mrp_model.id),
+        ('report_id', '=', mrp_report.id),
+        ('printer_id', '=', printer.id),
+        ('domain', '=', "[('state', '=', 'done')]")
+    ])
+    
+    if not existing_mrp:
+        env['printnode.scenario'].create({
+            'name': f"Auto ZPL on MO Done ({printer.name})",
+            'model_id': mrp_model.id,
+            'report_id': mrp_report.id,
+            'printer_id': printer.id,
+            'action_type': 'print_report',
+            'domain': "[('state', '=', 'done')]",
+            'active': True,
+        })
+
+# =========================================================
+# LOGIC 2: Transfers (Receipts, Delivery, Internal)
+# =========================================================
+picking_report_ref = 'tug_mrp_mods.action_report_picking_package_zpl'
+picking_report = env.ref(picking_report_ref, raise_if_not_found=False)
+
+if picking_report:
+    picking_model = env['ir.model']._get('stock.picking')
+    picking_domain = "[('state', '=', 'done')]"
+    
+    existing_picking = env['printnode.scenario'].search([
+        ('model_id', '=', picking_model.id),
+        ('report_id', '=', picking_report.id),
+        ('printer_id', '=', printer.id),
+        ('domain', '=', picking_domain)
+    ])
+    
+    if not existing_picking:
+        env['printnode.scenario'].create({
+            'name': f"Auto ZPL on Transfer Done ({printer.name})",
+            'model_id': picking_model.id,
+            'report_id': picking_report.id,
+            'printer_id': printer.id,
+            'action_type': 'print_report',
+            'domain': picking_domain,
+            'active': True,
+        })
+
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'display_notification',
+    'params': {
+        'title': 'Success',
+        'message': f"Print Scenarios configured for printer: {printer.name}",
+        'type': 'success',
+        'sticky': False,
+    }
+}
+        </field>
+    </record>
+</odoo>
