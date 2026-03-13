@@ -6,7 +6,7 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">tug_mrp_mods.report_qfm_067_template</field>
         <field name="report_file">tug_mrp_mods.report_qfm_067_template</field>
-        <field name="paperformat_id" ref="paperformat_portrait_label_75dpi"/>
+        <field name="paperformat_id" ref="paperformat_portrait_label_90dpi"/>
         <field name="binding_model_id" ref="mrp.model_mrp_production"/>
         <field name="binding_type">report</field>
     </record>
@@ -103,31 +103,41 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>No jewellery to be worn (wedding bands are OK)</td>
+                                        <td>No jewellery to be worn (wedding bands are ok)</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>No personal items placed within the line</td>
+                                        <td>No Personal items have been placed within the line</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>Line clear of previous product, packaging, labels &amp; waste. Bins emptied.</td>
+                                        <td>Production line is clear of all products, packaging, labels and waste from previous run. Bins have been emptied.</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>Line and machines are clean and sanitised</td>
+                                        <td>Tool box is labelled and clean with correct items and no unnecessary items</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Production line is clean and has been sanitised.</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <strong>Scale Check:</strong> Record Scale No. &amp; Std Weight.
-                                            <br/><span style="font-size: 9px; color: red;">If deviation > 1g, notify supervisor.</span>
+                                            Calibration check of scale. Record Scale No.<br/>
+                                            Record weight of <strong>200g</strong> std weight<br/>
+                                            If weight deviates by more than <strong>1g</strong>, do not use. Notify supervisor
                                         </td>
                                         <td class="text-center">No:____<br/>Wt:____</td>
                                         <td class="text-center">No:____<br/>Wt:____</td>
                                         <td class="text-center">No:____<br/>Wt:____</td>
                                         <td class="text-center">No:____<br/>Wt:____</td>
                                         <td class="text-center">No:____<br/>Wt:____</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Initials.</td>
+                                        <td/><td/><td/><td/><td/>
                                     </tr>
                                 </tbody>
                             </table>
@@ -153,31 +163,39 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>All documents are completed</td>
+                                        <td>All Documentation has been completed</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>All product and components removed from line</td>
+                                        <td>All product and components have been removed from the line</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>No labelled cartons returned to warehouse</td>
+                                        <td>No labelled cartons have been returned to the pallet</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>All waste placed in bins</td>
+                                        <td>All waste has been placed in the bins</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>Equipment cleaned and sanitised</td>
+                                        <td>All production equipment has been cleaned and sanitised</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>Floor and line area cleaned</td>
+                                        <td>Tool box – all items on the label list are accounted for and have been returned to the toolbox</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                     <tr>
-                                        <td>Cleaning equipment stored correctly</td>
+                                        <td>Floor around the production line has been cleaned</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>All cleaning equipment has been cleaned and stored correctly</td>
+                                        <td/><td/><td/><td/><td/>
+                                    </tr>
+                                    <tr>
+                                        <td>Initials.</td>
                                         <td/><td/><td/><td/><td/>
                                     </tr>
                                 </tbody>
