@@ -29,6 +29,17 @@
         <field name="report_file">tug_mrp_mods.report_mrp_package_zpl_template</field>
     </record>
 
+    <!-- NEW: Sample Label (ZPL) Action -->
+    <record id="action_report_mrp_sample_label_zpl" model="ir.actions.report">
+        <field name="name">Sample Label (ZPL)</field>
+        <field name="model">mrp.production</field>
+        <field name="report_type">qweb-text</field>
+        <field name="report_name">tug_mrp_mods.report_sample_label_zpl_template</field>
+        <field name="report_file">tug_mrp_mods.report_sample_label_zpl_template</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_type">report</field>
+    </record>
+
     <!-- ZPL Label Action (Transfers / Delivery) -->
     <record id="action_report_picking_package_zpl" model="ir.actions.report">
         <field name="name">Package Labels (ZPL)</field>
@@ -39,7 +50,6 @@
     </record>
 
     <!-- NEW: Package SSCC ZPL Action for the 'stock.package' Model -->
-    <!-- The binding_model_id property puts it directly in the 'Print' menu of the Package Form! -->
     <record id="action_report_stock_package_sscc_zpl" model="ir.actions.report">
         <field name="name">Package SSCC (ZPL)</field>
         <field name="model">stock.package</field>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_sample_label_zpl_template">
+        <t t-foreach="docs" t-as="o">
+            <t t-if="not o.lot_producing_ids">
+                <div class="alert alert-danger" role="alert" style="padding: 20px; font-family: sans-serif;">
+                    <h3 style="margin-top: 0;">Missing Lot/Serial Number</h3>
+                    <p>The Sample Label cannot be generated because there is no <strong>Lot/Serial Number</strong> assigned to this Manufacturing Order (<t t-esc="o.name"/>).</p>
+                    <p>Please assign a lot in the "Produced Lot/Serial Number" field before printing.</p>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-set="main_lot" t-value="o.lot_producing_ids[0]"/>
+^XA
+^CI28
+^FX -- Report Size: A6 (rotated for your logic) --
+^PW812
+^LL1218
+
+^CF0,70
+^FO730,30^A0R^FDSample for:^FS
+
+^CF0,50
+^FO630,30^A0R^FDProduct Code: <t t-esc="o.product_id.default_code"/>^FS
+
+^CF0,40
+^FO530,30^A0R^FDName: <t t-esc="o.product_id.name[:40]"/>^FS
+
+^CF0,40   
+^FO400,30^AbR^FH^FDBATCH: <t t-if="main_lot" t-esc="main_lot.name"/><t t-else="">N/A</t>^FS
+
+^FO330,30^AbR^FH^FDBBD: <t t-if="main_lot and main_lot.expiration_date" t-esc="main_lot.expiration_date.strftime('%d.%m.%Y')"/><t t-else=""> (DD.MM.YYYY)</t>^FS
+
+^FO260,30^A0R^FDProduction ID: <t t-esc="o.name"/>^FS
+
+^FO50,50^GB120,1120,3^FS
+
+^CF0,50
+^FO80,80^AdR^FD^FS
+
+^PQ1
+^XZ
+            </t>
+        </t>
+    </template>
+</odoo>
