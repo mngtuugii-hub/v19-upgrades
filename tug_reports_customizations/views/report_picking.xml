@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- We wrap your xpath in a proper template inheritance record -->
+    <template id="custom_stock_report_picking" inherit_id="stock.report_picking">
+        <xpath expr="/t[@t-name='stock.report_picking']" position="replace" mode="inner">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        
+                        <t t-set="address" t-value="None"/>
+                        <div class="page">
+                            
+                            <!-- Fetch MOs based on production_ids or original_sale_order_id -->
+                            <t t-set="mos" t-value="env['mrp.production'].search([('id', 'in', o.production_ids.ids)]) if 'production_ids' in o and o.production_ids else env['mrp.production'].search([('origin', '=', o.original_sale_order_id.name)]) if 'original_sale_order_id' in o and o.original_sale_order_id else []"/>
+
+                            <div class="oe_structure">
+                                <div class="row justify-content-end mb-3">
+                                    <div class="col-8">
+                                        <h2 t-field="o.name" class="mt-0">WH/OUT/00001</h2>
+                                        
+                                    </div>
+                                    <div class="col-4" name="right_box">
+                                        <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}">
+                                            <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center p-3 opacity-75 text-muted text-center">
+                                                (document barcode)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="informations" class="report-wrapping-flexbox clearfix row mb-4">
+                                    <div t-if="o.original_sale_order_id" class="col col-2 mw-100 mb-2" name="div_origin">
+                                        <strong>SO:</strong>
+                                        <div t-field="o.original_sale_order_id" class="m-0">S0001</div>
+                                    </div>
+                                    <div t-if="o.sale_order_ref" class="col col-3 mw-100 mb-2" name="div_origin">
+                                        <strong>PO:</strong>
+                                        <div t-field="o.sale_order_ref" class="m-0">S0001</div>
+                                    </div>
+                                    <div t-if="o.name" class="col col-2" name="div_operator">
+                                        <strong>WF Ref:</strong>
+                                            <p t-if="o.name" t-field="o.name"/>
+                                    </div>
+                                    <div t-if="o.origin" class="col col-2" name="origin">
+                                        <strong>Ref:</strong>
+                                            <p t-if="o.origin" t-field="o.origin"/>
+                                    </div>
+                                    <div t-if="o.picking_type_id.code == 'internal' and o.partner_id" class=" col col-2 mw-100 mb-2" name="div_contact">
+                                        <strong>Contact</strong>
+                                        <div t-field="o.partner_id" class="m-0"/>
+                                    </div>
+                                    
+                                    <div t-if="o.state" class="col col-2 mw-100 mb-2" name="div_sched_date">
+                                        <strong>Date</strong>
+                                        <t t-set="datetime_now" t-value="context_timestamp(datetime.datetime.now())"/>
+                                        <div t-if="o.state == 'done'" t-field="o.date_done" class="m-0"/>
+                                        <div class="m-0">
+                                            <span t-esc="datetime_now.strftime('%d-%m-%Y %H:%M')"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto" name="div_state">
+                                        <strong>Status:</strong>
+                                        <p t-field="o.state">Draft</p>
+                                    </div>
+                                </div>  
+                                    
+                                <p t-field="o.note"/>
+
+                                <table class="table table-sm" t-if="o.move_line_ids">
+                                    <t t-set="has_serial_number" t-value="any(ml.lot_id or ml.lot_name for ml in o.move_line_ids)" groups="stock.group_production_lot"/>
+                                    <thead>
+                                        <tr>
+                                            <th name="th_product"><strong>Product</strong></th>
+                                            <th name="th_serial_number" class="text-center" t-if="has_serial_number"><strong>Lot (BBD)</strong></th>
+                                            <th t-if="o.picking_type_id.code != 'internal'"><strong>Quantity</strong></th>
+                                            <th name="th_from" groups="stock.group_stock_multi_locations"><strong>Package</strong></th>
+                                            <th name="th_weight" class="text-center">
+                                                <strong t-if="o.picking_type_id.code == 'outgoing'">Total Weight</strong>
+                                                <strong t-else="">Required Weight</strong>
+                                            </th>
+                                            <th name="th_initials" class="text-center" t-if="o.picking_type_id.code != 'outgoing'"><strong>Initials</strong></th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="o.move_line_ids.sorted(lambda ml: (ml.product_id.default_code or '', ml.quantity))" t-as="ml">
+                                            <td>
+                                                <div class="fw-bold text-dark mb-1">
+                                                    <span t-field="ml.product_id.default_code"/>
+                                                </div>
+                                                <div class="text-wrap">
+                                                    <span t-field="ml.product_id.name"/>
+                                                </div>
+                                                <div t-if="ml.product_id.description_picking" class="text-muted small mt-1">
+                                                    <i class="fa fa-info-circle me-1"/>
+                                                    <span t-field="ml.product_id.description_picking"/>
+                                                </div>
+                                            </td>
+                                            <td class="text-center align-middle" t-if="has_serial_number">
+                                                <t t-if="ml.lot_id">
+                                                    <t t-set="alert_date_reached" t-value="ml.lot_id.alert_date and ml.lot_id.alert_date &lt;= datetime.datetime.now()"/>
+                                                    <div t-att-class="'fw-bold mb-1 text-danger' if alert_date_reached else 'fw-bold mb-1'" style="font-family: monospace; font-size: 1.25em;">
+                                                        <span t-field="ml.lot_id.name"/>
+                                                    </div>
+                                                    <div t-if="ml.lot_id.expiration_date" t-att-class="'small text-danger' if alert_date_reached else 'text-muted small'">
+                                                        <i class="fa fa-calendar-o me-1"/> 
+                                                        <span t-field="ml.lot_id.expiration_date" t-options="{'widget': 'date'}"/>
+                                                    </div>
+                                                </t>
+                                                <span t-else="" class="text-muted">-</span>
+                                            </td>
+                                            <td t-if="o.picking_type_id.code != 'internal'">
+                                                <span t-field="ml.quantity"/>
+                                                <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                            </td>
+                                            
+                                            <td groups="stock.group_stock_multi_locations">
+                                                <t t-if="o.picking_type_id.code in ['incoming', 'outgoing']">
+                                                    <t t-if="ml.result_package_id">
+                                                        <strong><span t-field="ml.result_package_id" class=""/></strong>
+                                                    </t><br/>
+                                                    <small class="text-muted" t-if="ml.result_package_id.package_type_id">
+                                                        <t t-out="int(ml.result_package_id.package_type_id.packaging_length)"/>x<t t-out="int(ml.result_package_id.package_type_id.width)"/>x<t t-out="int(ml.result_package_id.package_type_id.height)"/> 
+                                                        <span t-field="ml.result_package_id.package_type_id.length_uom_name"/>
+                                                    </small>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-if="ml.package_id">
+                                                        <strong><span t-field="ml.package_id" class=""/></strong>
+                                                    </t><br/>
+                                                    <small class="text-muted" t-if="ml.package_id.package_type_id">
+                                                        <t t-out="int(ml.package_id.package_type_id.packaging_length)"/>x<t t-out="int(ml.package_id.package_type_id.width)"/>x<t t-out="int(ml.package_id.package_type_id.height)"/> 
+                                                        <span t-field="ml.package_id.package_type_id.length_uom_name"/>
+                                                    </small>
+                                                </t>
+                                                <span t-field="ml.location_id.location_id" t-if="o.picking_type_id.code != 'outgoing'"/>
+                                                <strong t-if="o.picking_type_id.code != 'outgoing'"><span t-field="ml.location_id.name"/></strong>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-if="o.picking_type_id.code == 'outgoing'">
+                                                    <t t-out="round((ml.quantity or 0.0) * (ml.product_id.weight or 0.0), 3)"/> <span t-field="ml.product_id.weight_uom_name"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-out="round(ml.quantity or 0.0, 3)"/> <span t-field="ml.product_id.weight_uom_name"/>
+                                                </t>
+                                            </td>   
+                                            <td class="text-center border-start" style="width: 50px;" t-if="o.picking_type_id.code != 'outgoing'"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <t t-set="no_reserved_product" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty != x.quantity and x.move_line_ids and x.state!='done')"/>
+                                <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product">
+                                    <i class="fa fa-exclamation-triangle"/>
+                                        All products could not be reserved. Click on the "Check Availability" button to try to reserve products.
+                                </p>
+                                <p t-else=""/>
+                                
+                                <div class="mt-4" t-if="o.picking_type_id.code != 'outgoing' and o.move_line_ids">
+                                    <strong>Locations List: </strong>
+                                    <div class="mt-2">
+                                        <t t-foreach="sorted(set(o.move_line_ids.mapped('location_id.name')))" t-as="loc">
+                                            <span t-if="loc" class="border border-dark rounded px-2 py-1 me-2 mb-2 d-inline-block bg-light">
+                                                <t t-esc="loc"/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5 pt-4" style="page-break-inside: avoid;">
+                                    <div class="col-4 text-center">
+                                        <strong t-if="o.picking_type_id.code == 'incoming'">Received by</strong>
+                                        <strong t-elif="o.picking_type_id.code == 'outgoing'">Delivered by</strong>
+                                        <strong t-else="">Picked by</strong>
+                                        <div class="mt-4 border-bottom border-dark" style="width: 80%; margin: 0 auto;"></div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <strong>Signature</strong>
+                                        <div class="mt-4 border-bottom border-dark" style="width: 80%; margin: 0 auto;"></div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <strong>Date</strong>
+                                        <div class="mt-4 border-bottom border-dark" style="width: 80%; margin: 0 auto;"></div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>
